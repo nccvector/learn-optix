@@ -78,7 +78,7 @@ createModule(OptixDeviceContext &context, OptixModule &module, OptixPipelineComp
   pipelineCompileOptions.pipelineLaunchParamsVariableName = "params";
 
   std::string inputFile;
-  loadFile("./solid_color.ptx", inputFile);
+  loadFile("./cuda_compile_ptx_1_generated_solid_color.cu.ptx", inputFile);
 
   optixModuleCreate(
       context,

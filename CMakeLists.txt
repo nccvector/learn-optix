@@ -23,7 +23,21 @@ include_directories(
         "${CMAKE_CURRENT_SOURCE_DIR}"
 )
 
-# Add cpp and cu files to target. CMake will automatically compile cu with nvcc
+set(PROGRAMS
+        solid_color.cu
+)
+
+# Compile all cuda files to ptx
+cuda_compile_ptx(cuda_ptx_files
+        ${PROGRAMS}
+)
+
+add_custom_target(ptx ALL
+        DEPENDS ${cuda_ptx_files} ${PROGRAMS}
+        SOURCES ${PROGRAMS}
+)
+
+# Add cpp files to target
 add_executable(cwc
         main.cpp
 )
@@ -32,3 +46,4 @@ target_link_libraries(cwc
         ${GLFW_LIB_NAME}
         ${CUDA_LIBRARIES}
 )
+
