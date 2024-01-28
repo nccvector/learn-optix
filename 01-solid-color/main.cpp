@@ -20,7 +20,7 @@
 #define CHANNELS 4
 
 struct Params {
-  uchar4* image;
+  uchar4 *image;
   unsigned int image_width;
 };
 
@@ -63,8 +63,11 @@ void createContext(OptixDeviceContext &context) {
   optixDeviceContextCreate(cuCtx, &options, &context);
 }
 
-void
-createModule(OptixDeviceContext &context, OptixModule &module, OptixPipelineCompileOptions &pipelineCompileOptions) {
+void createModule(
+    OptixDeviceContext &context,
+    OptixModule &module,
+    OptixPipelineCompileOptions &pipelineCompileOptions
+) {
   OptixModuleCompileOptions module_compile_options = {};
 #if !defined(NDEBUG)
   module_compile_options.optLevel = OPTIX_COMPILE_OPTIMIZATION_LEVEL_0;
@@ -224,10 +227,10 @@ int main(int argc, char *argv[]) {
   //
   // launch
   //
-  uchar4* device_pixels = nullptr;
-  cudaFree( reinterpret_cast<void*>( device_pixels ) );
+  uchar4 *device_pixels = nullptr;
+  cudaFree(reinterpret_cast<void *>( device_pixels ));
   cudaMalloc(
-      reinterpret_cast<void**>(&device_pixels),
+      reinterpret_cast<void **>(&device_pixels),
       WIDTH * HEIGHT * sizeof(uchar4)
   );
 

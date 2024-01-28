@@ -10,7 +10,7 @@ set(CUDA_MIN_SM_TARGET sm_50 CACHE STRING "Minimum CUDA SM architecture to use f
 # Add paths to our CMake code to the module path, so they can be found automatically by
 # CMake.
 set(CMAKE_MODULE_PATH
-        ${CMAKE_CURRENT_SOURCE_DIR}/CMake
+        ${CMAKE_CURRENT_SOURCE_DIR}/../CMake
         ${CMAKE_MODULE_PATH}
 )
 
@@ -20,7 +20,7 @@ find_package(OptiX REQUIRED)
 include_directories(
         "${OptiX_INCLUDE}"
         "${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES}"
-        "${CMAKE_CURRENT_SOURCE_DIR}"
+        "${CMAKE_CURRENT_SOURCE_DIR}/../ext"
 )
 
 set(PROGRAMS
