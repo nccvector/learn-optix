@@ -14,7 +14,7 @@ set(CMAKE_MODULE_PATH
         ${CMAKE_MODULE_PATH}
 )
 
-set(OptiX_INSTALL_DIR "/home/vector/optix77")
+# IMPORTANT: Must set(OptiX_INSTALL_DIR "<optix-install-dir>")
 find_package(OptiX REQUIRED)
 
 include_directories(
