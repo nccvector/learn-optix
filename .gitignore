@@ -1,1 +1,7 @@
 build
+
+**/.idea*
+**/cmake*
+**/nohup*
+**/*.swp*
+

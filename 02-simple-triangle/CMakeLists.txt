@@ -3,9 +3,15 @@ cmake_minimum_required(VERSION 3.0.0)
 # Specify project and languages (notice: CUDA)
 project(cwc LANGUAGES CXX CUDA)
 
-find_package(CUDA REQUIRED)
 
-set(CUDA_MIN_SM_TARGET sm_50 CACHE STRING "Minimum CUDA SM architecture to use for compilation.")
+# Set CUDA architecture
+find_package(CUDAToolkit REQUIRED)
+set(CMAKE_CUDA_ARCHITECTURES "50")
+
+include_directories(
+        "${CUDAToolkit_INCLUDE_DIRS}"
+)
+
 
 # Add paths to our CMake code to the module path, so they can be found automatically by
 # CMake.
@@ -16,26 +22,21 @@ set(CMAKE_MODULE_PATH
 
 # IMPORTANT: Must set(OptiX_INSTALL_DIR "<optix-install-dir>")
 find_package(OptiX REQUIRED)
-
 include_directories(
         "${OptiX_INCLUDE}"
-        "${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES}"
         "${CMAKE_CURRENT_SOURCE_DIR}/../ext"
 )
 
-set(PROGRAMS
-        solid_color.cu
+add_library(programs OBJECT solid_color.cu)
+set_property(TARGET programs PROPERTY CUDA_OPTIX_COMPILATION ON)
+
+configure_file(
+  "${CMAKE_SOURCE_DIR}/config.h.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/config.h"
+  @ONLY
 )
 
-# Compile all cuda files to ptx
-cuda_compile_ptx(cuda_ptx_files
-        ${PROGRAMS}
-)
-
-add_custom_target(ptx ALL
-        DEPENDS ${cuda_ptx_files} ${PROGRAMS}
-        SOURCES ${PROGRAMS}
-)
+include_directories("${CMAKE_CURRENT_BINARY_DIR}")
 
 # Add cpp files to target
 add_executable(cwc
@@ -44,6 +45,6 @@ add_executable(cwc
 
 target_link_libraries(cwc
         ${GLFW_LIB_NAME}
-        ${CUDA_LIBRARIES}
+	CUDA::cudart
 )
 

@@ -1,0 +1,3 @@
+#pragma once
+// The directory where the OptiX modules are generated.
+#define OPTIX_PROGRAMS_DIR "@CMAKE_CURRENT_BINARY_DIR@/CMakeFiles/programs.dir"
