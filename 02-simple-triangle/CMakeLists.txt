@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.0.0)
 # Specify project and languages (notice: CUDA)
 project(cwc LANGUAGES CXX CUDA)
 
+add_compile_definitions(DEBUG)
 
 # Set CUDA architecture
 find_package(CUDAToolkit REQUIRED)

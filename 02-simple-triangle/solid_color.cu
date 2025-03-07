@@ -15,13 +15,13 @@ __constant__ Params params;
 
 extern "C"
 __global__ void __raygen__draw_solid_color() {
-  uint3 launch_index = optixGetLaunchIndex();
-  RayGenData *rtData = (RayGenData *) optixGetSbtDataPointer();
+  const uint3 launch_index = optixGetLaunchIndex();
+  const auto rtData = reinterpret_cast<RayGenData *>(optixGetSbtDataPointer());
 
   params.image[launch_index.y * params.image_width + launch_index.x] = {
-      (unsigned char) (rtData->r * 255),
-      (unsigned char) (rtData->g * 255),
-      (unsigned char) (rtData->b * 255),
-      (unsigned char) (rtData->a * 255)
+    static_cast<unsigned char>(rtData->r * 255),
+    static_cast<unsigned char>(rtData->g * 255),
+    static_cast<unsigned char>(rtData->b * 255),
+    static_cast<unsigned char>(rtData->a * 255)
   };
 }

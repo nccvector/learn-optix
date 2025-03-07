@@ -57,9 +57,9 @@ static void context_log_cb(unsigned int level, const char *tag, const char *mess
 
 void createContext(OptixDeviceContext &context) {
   // Initialize CUDA
-  cudaFree(0);
+  cudaFree(nullptr);
 
-  CUcontext cuCtx = 0; // zero means take the current context
+  CUcontext cuCtx = nullptr; // zero means take the current context
   optixInit();
   OptixDeviceContextOptions options = {};
   options.logCallbackFunction = &context_log_cb;
@@ -73,7 +73,7 @@ void createModule(
   OptixPipelineCompileOptions &pipelineCompileOptions
 ) {
   OptixModuleCompileOptions module_compile_options = {};
-#if !defined(NDEBUG)
+#if defined(DEBUG)
   module_compile_options.optLevel = OPTIX_COMPILE_OPTIMIZATION_LEVEL_0;
   module_compile_options.debugLevel = OPTIX_COMPILE_DEBUG_LEVEL_FULL;
 #endif
@@ -203,7 +203,7 @@ int main(int argc, char *argv[]) {
     cudaMalloc(reinterpret_cast<void **>(&raygen_record), raygen_record_size);
     RayGenSbtRecord rg_sbt;
     optixSbtRecordPackHeader(raygen_prog_group, &rg_sbt);
-    rg_sbt.data = {0.462f, 0.725f, 0.f, 1.0f};
+    rg_sbt.data = {1.0, 0.f, 0.f, 1.0f};
     cudaMemcpy(
       reinterpret_cast<void *>(raygen_record),
       &rg_sbt,
@@ -242,7 +242,10 @@ int main(int argc, char *argv[]) {
   std::vector<uchar4> host_pixels;
   host_pixels.reserve(WIDTH * HEIGHT);
 
-  Params params; {
+  Params params{};
+
+  //
+  {
     CUstream stream;
     cudaStreamCreate(&stream);
 
@@ -261,12 +264,11 @@ int main(int argc, char *argv[]) {
     optixLaunch(pipeline, stream, d_param, sizeof(params), &sbt, WIDTH, HEIGHT, /*depth=*/1);
     // CUDA_SYNC_CHECK();
 
-    cudaError_t err = cudaDeviceSynchronize();
-    if (err != cudaSuccess)
-      throw "KERNEL EXECUTION FAILED";
+    if (cudaError_t err = cudaDeviceSynchronize(); err != cudaSuccess)
+      throw R"(KERNEL EXECUTION FAILED)";
 
     cudaMemcpy(
-      static_cast<void *>(host_pixels.data()),
+      host_pixels.data(),
       device_pixels,
       WIDTH * HEIGHT * sizeof(uchar4),
       cudaMemcpyDeviceToHost
