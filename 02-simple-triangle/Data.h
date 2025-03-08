@@ -9,7 +9,7 @@ struct Params {
   uchar4 *image;
   unsigned int imageWidth;
   unsigned int imageHeight;
-  float3 cameraEye, cameraU, cameraV, cameraW;
+  float3 cameraPosition, cameraU, cameraV, cameraW;
   OptixTraversableHandle traversableHandle;
 };
 

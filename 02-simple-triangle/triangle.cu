@@ -24,7 +24,7 @@ static __forceinline__ __device__ void computeRay(uint3 idx, uint3 dim, float3 &
                      static_cast<float>(idx.y) / static_cast<float>(dim.y)
                    ) - 1.0f;
 
-  origin = params.cameraEye;
+  origin = params.cameraPosition;
   direction = normalize(d.x * U + d.y * V + W);
 }
 
